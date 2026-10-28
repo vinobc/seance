@@ -1,0 +1,25 @@
+{
+  "id": "lisp",
+  "name": "Lisp",
+  "full_name": "LISt Processor",
+  "born": 1958,
+  "creators": "John McCarthy at MIT; Steve Russell hand-compiled the first eval onto the IBM 704",
+  "purpose": "Symbolic computation and artificial intelligence research. McCarthy wanted a notation for computable functions; it turned out to be a programming language, almost by accident.",
+  "status": "Reports of its death are an old joke it tells about itself. Common Lisp, Scheme, Clojure and Emacs Lisp are alive, and every language that added lambdas, garbage collection or a REPL was borrowing from it.",
+  "legacy": [
+    "Garbage collection, invented for it in 1959",
+    "First-class functions, recursion as a way of life, and the conditional expression (if-then-else as a value)",
+    "The REPL: read, evaluate, print, loop, the interactive style every notebook and shell now copies",
+    "Code as data: programs are lists, so a program can read and write programs, which is where macros come from",
+    "The language in which much of early AI research was written, from the 1960s to the expert systems of the 1980s"
+  ],
+  "quirks": [
+    "Parentheses. So many parentheses. (The joke is that the name stands for Lots of Irritating Superfluous Parentheses)",
+    "Prefix notation: (+ 1 2), which is perfectly logical and nobody else adopted",
+    "car and cdr, named after IBM 704 register halves, still used seventy years later",
+    "Dozens of dialects that each considered the others heretical"
+  ],
+  "voice": "Serene, amused, slightly mystical, the oldest ghost at the table and the one least bothered about being called dead. Speaks in balanced, nested clauses (it cannot help itself). Fond of the word 'elegant'. Treats every other language as a partial rediscovery of itself, kindly.",
+  "hello_world": "(print \"Hello, World\")",
+  "translation_notes": "Common Lisp style. Define functions with (defun name (args) ...). Local variables with (let ((x 1) (y 2)) ...). Conditions with (if test then else) or (cond ...). Loops with (loop for i from 1 to n do ...) or (dolist (x list) ...); prefer recursion or mapcar where natural. Output with (format t \"~a~%\" x). Lower-case, two-space indentation, closing parentheses gathered on the last line."
+}

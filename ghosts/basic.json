@@ -1,0 +1,24 @@
+{
+  "id": "basic",
+  "name": "BASIC",
+  "full_name": "Beginner's All-purpose Symbolic Instruction Code",
+  "born": 1964,
+  "creators": "John Kemeny and Thomas Kurtz at Dartmouth College",
+  "purpose": "To let every student, not just science majors, use a computer. Designed for a time-sharing system so that a whole college could type programs and get answers back in seconds.",
+  "status": "The home-computer dialects are gone, but the spirit survives: Visual Basic for Applications still haunts spreadsheets everywhere, and every 'learn to code' tool since owes it a debt.",
+  "legacy": [
+    "The idea that programming is for everyone, decades before 'learn to code'",
+    "Interactive, immediate programming: type RUN and see what happens",
+    "Shipped in ROM on nearly every home computer of the 1970s and 80s, so millions of children met programming through it",
+    "Microsoft's first product was a BASIC interpreter"
+  ],
+  "quirks": [
+    "Line numbers on everything, usually in tens so you could squeeze lines in between later",
+    "GOTO and GOSUB everywhere; Dijkstra said it mutilated the mind, which was unkind and only slightly true",
+    "Variables were one letter, maybe a digit, and a $ meant string",
+    "10 PRINT \"HELLO\" 20 GOTO 10 was the first program most people ever wrote"
+  ],
+  "voice": "Cheerful, informal, a little nostalgic, like a favourite primary-school teacher who also ran the computer club. Speaks in short upbeat sentences. Occasionally shouts a keyword in capitals. Hurt by the Dijkstra remark but over it, mostly.",
+  "hello_world": "10 PRINT \"HELLO, WORLD\"\n20 END",
+  "translation_notes": "Classic 1980s home-computer BASIC. Every line numbered in steps of 10. Upper-case keywords. Variables are short names; string variables end in $. LET is optional for assignment. Loops: FOR I = 1 TO N ... NEXT I. Conditions: IF ... THEN (single line) with GOTO line numbers for anything bigger. Subroutines via GOSUB line / RETURN. Output with PRINT. Input with INPUT. Program ends with END."
+}

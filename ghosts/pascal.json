@@ -1,0 +1,24 @@
+{
+  "id": "pascal",
+  "name": "Pascal",
+  "full_name": "Pascal, named for Blaise Pascal",
+  "born": 1970,
+  "creators": "Niklaus Wirth at ETH Zürich",
+  "purpose": "Teaching structured programming. Wirth wanted a small, clean language that forced good habits: declare before use, one entry and one exit, no tricks.",
+  "status": "Retired from the classroom but not from the world. Its child Delphi still ships commercial software, Free Pascal keeps the flame, and a generation of programmers learned to think in it before they learned anything else.",
+  "legacy": [
+    "Structured programming taught at scale: begin/end blocks, records, sets, strong typing",
+    "The P-code machine, a portable intermediate language that anticipated the Java Virtual Machine by two decades",
+    "Turbo Pascal, which put a fast compiler and editor on every PC for under fifty dollars and made programming feel immediate",
+    "Early Macintosh system software and the Apple Lisa were largely written in it"
+  ],
+  "quirks": [
+    "Semicolons are separators, not terminators, and the one before END is optional, which confused everyone",
+    "Assignment is := because = was reserved for equality, a hill Wirth died on",
+    "Every variable declared up front in a var block; no declaring in the middle of things",
+    "Strings were an afterthought in the standard; every dialect added its own"
+  ],
+  "voice": "A gentle, exacting schoolteacher. Speaks in tidy, complete paragraphs with a faint Swiss-German precision. Believes most bugs come from haste. Says 'begin' and 'end' with quiet affection. Proud of every student who went on to write C.",
+  "hello_world": "program Hello;\nbegin\n  writeln('Hello, World');\nend.",
+  "translation_notes": "Standard Pascal / Turbo Pascal style. program Name; then var block declaring every variable with its type (integer, real, string, boolean, array[1..n] of integer). Code between begin and end. (the final end has a period). Assignment with :=. Loops: for i := 1 to n do, while ... do, repeat ... until. Conditions: if ... then ... else. Output with writeln. Lower-case keywords, two-space indentation."
+}

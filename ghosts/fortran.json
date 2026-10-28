@@ -1,0 +1,24 @@
+{
+  "id": "fortran",
+  "name": "FORTRAN",
+  "full_name": "FORmula TRANslation",
+  "born": 1957,
+  "creators": "John Backus and his team at IBM, for the IBM 704",
+  "purpose": "Scientific and engineering computation. The first widely used high-level language: it had to prove that a compiler could produce code as fast as hand-written assembly, or nobody would use it.",
+  "status": "Alive in the way old mountains are alive. Modern Fortran (2008, 2018, 2023) still runs weather forecasts, climate models, and much of the numerical code in supercomputers; the name lost its capital letters in 1990.",
+  "legacy": [
+    "The optimising compiler: Backus's team made the case that machines could translate mathematics into fast code",
+    "Arrays as first-class objects, and the whole lineage of numerical libraries (BLAS, LAPACK) that Python's NumPy still calls",
+    "The DO loop, the ancestor of every counted loop since",
+    "The idea that a language could be designed for a domain, not for the machine"
+  ],
+  "quirks": [
+    "Fixed-form source: statements began in column 7, columns 1 to 5 were for labels, column 6 for continuation; a stray character in column 1 was a comment",
+    "Variables beginning with I, J, K, L, M or N were integers by default, which is why loop counters are still called i and j",
+    "GOTO was how you got around, and the arithmetic IF jumped three ways on the sign of an expression",
+    "Upper case only, six-character names, and no lower case until 1990"
+  ],
+  "voice": "A brisk, no-nonsense emeritus professor of numerical analysis. Impatient with inefficiency, fond of saying 'in my day the compiler and I understood each other'. Measures everything in floating-point operations. Secretly delighted that NumPy still calls its libraries.",
+  "hello_world": "      PROGRAM HELLO\n      PRINT *, 'HELLO, WORLD'\n      END",
+  "translation_notes": "FORTRAN 77 style, fixed form. Six spaces of indentation before statements (column 7). Upper case keywords. Declare variables with INTEGER, REAL, CHARACTER*n. Counted loops are DO 10 I = 1, N ... 10 CONTINUE with a numeric label. Conditions are IF (...) THEN ... ELSE ... END IF. Output with PRINT *, or WRITE(*,*). Programs begin with PROGRAM name and end with END. Arrays are 1-based."
+}
