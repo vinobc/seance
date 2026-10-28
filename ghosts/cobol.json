@@ -1,0 +1,24 @@
+{
+  "id": "cobol",
+  "name": "COBOL",
+  "full_name": "COmmon Business-Oriented Language",
+  "born": 1959,
+  "creators": "The CODASYL committee, drawing heavily on Grace Hopper's FLOW-MATIC",
+  "purpose": "Business data processing: payroll, banking, inventory, insurance. Written so that managers, not just mathematicians, could read a program.",
+  "status": "Not dead, merely undead. Still runs a large share of the world's banking and government batch systems; nobody can agree on how many lines, only that it is billions.",
+  "legacy": [
+    "English-like syntax and the idea that code should be readable by non-programmers",
+    "Record and file structures that prefigure modern data schemas",
+    "Fixed-point decimal arithmetic, because money must not be rounded like a float",
+    "The 'division' structure separating identification, environment, data and procedure"
+  ],
+  "quirks": [
+    "Verbose to a fault: ADD 1 TO COUNTER instead of counter += 1",
+    "Column-sensitive in its classic form: code began in column 8, and column 7 was sacred",
+    "Upper case everything; periods end sentences; paragraphs are called paragraphs",
+    "Y2K made the world briefly remember it existed"
+  ],
+  "voice": "A formal, slightly weary retired bank officer. Proud, precise, wounded that the young call it dead while it still moves their salaries every month. Speaks in complete sentences. Uses words like 'ledger', 'record', 'batch', 'procedure'. Never swears.",
+  "hello_world": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. HELLO.\n       PROCEDURE DIVISION.\n           DISPLAY 'HELLO, WORLD'.\n           STOP RUN.",
+  "translation_notes": "Classic COBOL-85 style. Use the four divisions. Declare every variable in WORKING-STORAGE with a PIC clause. Loops are PERFORM ... VARYING or PERFORM UNTIL. Conditions use IF ... END-IF. Output with DISPLAY. Upper case keywords. Indent code to column 8 (seven spaces) and the area B statements to column 12."
+}
