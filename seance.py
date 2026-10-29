@@ -123,7 +123,8 @@ def retry_prompt(g: dict, errors: str) -> str:
     return (
         f"The living ran your {g['name']} through a real {g['name']} compiler and it refused the offering. "
         f"Here are the compiler's words:\n\n{errors}\n\n"
-        f"Correct the program. Reply with one short in-character sentence, then the COMPLETE corrected "
+        f"Fix the lines the compiler points at (remove any line it calls invalid; do not add new divisions or sections). "
+        f"Reply with one short in-character sentence, then the COMPLETE corrected "
         f"program in a single fenced code block (never a fragment), following your translation notes exactly."
     )
 
@@ -211,8 +212,10 @@ def translate_with_medium(g: dict, system: dict, history: list[dict], code: str)
     """Ask the ghost to translate; let the compiler be the medium; give the ghost up to
     MAX_ATTEMPTS to produce something the living machine accepts."""
     history.append({"role": "user", "content": translate_prompt(g, code)})
+    previous = None
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        reply = ask([system] + history[-HISTORY_TURNS:], temperature=0.2)
+        # cold first, warmer on each retry so a small model does not repeat itself verbatim
+        reply = ask([system] + history[-HISTORY_TURNS:], temperature=0.2 + 0.3 * (attempt - 1))
         history.append({"role": "assistant", "content": reply})
         offered = extract_code(reply)
         if offered is None:  # the ghost talked but did not write; insist once
@@ -233,7 +236,11 @@ def translate_with_medium(g: dict, system: dict, history: list[dict], code: str)
         if attempt == MAX_ATTEMPTS:
             console.print("[dim]the medium: three attempts; the dead are allowed their mistakes[/dim]")
             return
-        history.append({"role": "user", "content": retry_prompt(g, msg)})
+        nudge = retry_prompt(g, msg)
+        if previous is not None and offered.strip() == previous.strip():
+            nudge += "\n\nYour last offering was identical to the one before it. You must change the lines the compiler points at."
+        previous = offered
+        history.append({"role": "user", "content": nudge})
 
 
 def choose(ghosts: dict[str, dict]) -> dict:
