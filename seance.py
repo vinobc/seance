@@ -92,6 +92,24 @@ COMPILERS = {
 }
 MAX_ATTEMPTS = 3
 
+# The medium's grimoire: idioms the dead consistently misremember, corrected before the
+# compiler sees them. Each is announced, so the ghost gets no credit it did not earn.
+FIXUPS = {
+    "cobol": [
+        (re.compile(r"\b([A-Z0-9-]+)\s+MOD\s+(\d+)\b"), r"FUNCTION MOD(\1 \2)", "MOD is a function in COBOL"),
+        (re.compile(r"^\s*INCREMENT\s+([A-Z0-9-]+)", re.M), r"           ADD 1 TO \1", "there is no INCREMENT verb"),
+    ],
+}
+
+
+def apply_fixups(ghost_id: str, code: str) -> tuple[str, list[str]]:
+    notes = []
+    for pattern, repl, why in FIXUPS.get(ghost_id, []):
+        code, n = pattern.subn(repl, code)
+        if n:
+            notes.append(why)
+    return code, notes
+
 
 def extract_code(reply: str) -> str | None:
     m = re.search(r"```[a-zA-Z0-9_+-]*\n(.*?)```", reply, re.S)
@@ -227,6 +245,9 @@ def translate_with_medium(g: dict, system: dict, history: list[dict], code: str)
         if offered is None:
             console.print("[dim]the medium: the ghost would not write[/dim]")
             return
+        offered, fixes = apply_fixups(g["id"], offered)
+        for why in fixes:
+            console.print(f"[yellow]the medium whispers a correction:[/yellow] {why}")
         ok, msg = compile_check(g["id"], offered)
         if ok:
             console.print(f"[green]the medium:[/green] {msg} (attempt {attempt})")
