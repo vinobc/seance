@@ -12,7 +12,11 @@ model (Gemma via Ollama). Fully offline.
 from __future__ import annotations
 
 import json
+import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import ollama
@@ -73,6 +77,54 @@ def translate_prompt(g: dict, code: str) -> str:
         f"Before the block, one sentence of in-character reaction. After the block, at most two sentences "
         f"pointing out one thing the living have forgotten that your way did better, or one thing you envy.\n\n"
         f"```python\n{code}\n```"
+    )
+
+
+# --------------------------------------------------------------------------- the medium
+
+# The ghost speaks; a real compiler judges. Each entry: (binary, args builder, source suffix).
+# If the compiler is not installed, the séance still works, it just takes the ghost at its word.
+COMPILERS = {
+    "cobol":   ("cobc",     lambda src, out: ["cobc", "-x", "-free", "-o", out, src], ".cob"),
+    "fortran": ("gfortran", lambda src, out: ["gfortran", "-std=legacy", "-o", out, src], ".f"),
+    "pascal":  ("fpc",      lambda src, out: ["fpc", "-o" + out, src], ".pas"),
+    "lisp":    ("sbcl",     lambda src, out: ["sbcl", "--script", src], ".lisp"),
+}
+MAX_ATTEMPTS = 3
+
+
+def extract_code(reply: str) -> str | None:
+    m = re.search(r"```[a-zA-Z0-9_+-]*\n(.*?)```", reply, re.S)
+    return m.group(1) if m else None
+
+
+def compile_check(ghost_id: str, code: str) -> tuple[bool, str]:
+    """Return (ok, message). ok is True when the compiler accepts the code (or none is installed)."""
+    spec = COMPILERS.get(ghost_id)
+    if not spec or not shutil.which(spec[0]):
+        return True, "no compiler present; the ghost's word is taken on faith"
+    binary, build, suffix = spec
+    with tempfile.TemporaryDirectory() as tmp:
+        src = str(Path(tmp) / f"offering{suffix}")
+        out = str(Path(tmp) / "offering")
+        Path(src).write_text(code, encoding="utf-8")
+        try:
+            r = subprocess.run(build(src, out), capture_output=True, text=True, timeout=60, cwd=tmp)
+        except subprocess.TimeoutExpired:
+            return False, "the compiler did not answer within a minute"
+    if r.returncode == 0:
+        return True, f"{binary} accepted the code"
+    err = (r.stderr or r.stdout).strip()
+    lines = [l for l in err.splitlines() if l.strip()][:12]
+    return False, "\n".join(lines)
+
+
+def retry_prompt(g: dict, errors: str) -> str:
+    return (
+        f"The living ran your {g['name']} through a real {g['name']} compiler and it refused the offering. "
+        f"Here are the compiler's words:\n\n{errors}\n\n"
+        f"Correct the program. Reply with one short in-character sentence, then the complete corrected "
+        f"program in a single fenced code block, following your translation notes exactly."
     )
 
 
@@ -145,12 +197,36 @@ def seance(g: dict) -> None:
             code = read_block()
             if not code.strip():
                 continue
-            user = translate_prompt(g, code)
+            translate_with_medium(g, system, history, code)
+            continue
 
         history.append({"role": "user", "content": user})
         messages = [system] + history[-HISTORY_TURNS:]
         reply = ask(messages)
         history.append({"role": "assistant", "content": reply})
+
+
+def translate_with_medium(g: dict, system: dict, history: list[dict], code: str) -> None:
+    """Ask the ghost to translate; let the compiler be the medium; give the ghost up to
+    MAX_ATTEMPTS to produce something the living machine accepts."""
+    history.append({"role": "user", "content": translate_prompt(g, code)})
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        reply = ask([system] + history[-HISTORY_TURNS:])
+        history.append({"role": "assistant", "content": reply})
+        offered = extract_code(reply)
+        if offered is None:
+            console.print("[dim]the medium: no code block in the reply[/dim]")
+            return
+        ok, msg = compile_check(g["id"], offered)
+        if ok:
+            console.print(f"[green]the medium:[/green] {msg} (attempt {attempt})")
+            return
+        console.print(Panel(msg, title=f"the medium: the compiler refused (attempt {attempt})",
+                            border_style="red"))
+        if attempt == MAX_ATTEMPTS:
+            console.print("[dim]the medium: three attempts; the dead are allowed their mistakes[/dim]")
+            return
+        history.append({"role": "user", "content": retry_prompt(g, msg)})
 
 
 def choose(ghosts: dict[str, dict]) -> dict:

@@ -31,6 +31,14 @@ Inside the séance:
 
 The facts are human-written; the voice is the model's. Each ghost in `ghosts/` is a small profile with dates, creator, purpose, legacy and a canonical hello-world program, checked against the historical record. The model never invents history: the profile is injected into its system prompt, and it is told to stay inside it. What the model *does* bring is the thing a 1990s textbook can't: a personality, a conversation, and the ability to translate your code into a dialect that has not been written in anger for decades.
 
+## The medium
+
+A ghost's memory is imperfect. When you `/translate`, Séance hands the ghost's code to a real compiler for that language if one is installed (`cobc` from GnuCOBOL, `gfortran`, `fpc`, `sbcl`). If the compiler refuses, its error messages go back to the ghost, which gets up to three attempts. The ghost speaks; the compiler is the medium. Without a compiler installed, the séance still works and takes the ghost at its word.
+
+```bash
+brew install gnucobol gcc fpc sbcl    # optional, any subset
+```
+
 ## Ghosts
 
 `cobol` (1959), `fortran` (1957), `pascal` (1970), `basic` (1964), `lisp` (1958). Add your own: copy a file in `ghosts/` and fill in the altar.
