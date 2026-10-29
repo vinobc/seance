@@ -123,19 +123,20 @@ def retry_prompt(g: dict, errors: str) -> str:
     return (
         f"The living ran your {g['name']} through a real {g['name']} compiler and it refused the offering. "
         f"Here are the compiler's words:\n\n{errors}\n\n"
-        f"Correct the program. Reply with one short in-character sentence, then the complete corrected "
-        f"program in a single fenced code block, following your translation notes exactly."
+        f"Correct the program. Reply with one short in-character sentence, then the COMPLETE corrected "
+        f"program in a single fenced code block (never a fragment), following your translation notes exactly."
     )
 
 
 # --------------------------------------------------------------------------- séance
 
-def ask(messages: list[dict]) -> str:
-    """Stream the ghost's reply so the words arrive like a planchette moving."""
+def ask(messages: list[dict], temperature: float = 0.8) -> str:
+    """Stream the ghost's reply so the words arrive like a planchette moving.
+    Conversation runs warm (0.8) for personality; code runs cold (0.2) for accuracy."""
     text = ""
     with console.status("[dim]the candle flickers...[/dim]", spinner="dots"):
         stream = ollama.chat(model=MODEL, messages=messages, stream=True,
-                             options={"temperature": 0.8})
+                             options={"temperature": temperature})
         first = next(stream)
         text += first["message"]["content"]
     console.print(f"[bold magenta]{messages[0]['_ghost']}[/bold magenta]: ", end="")
@@ -211,11 +212,17 @@ def translate_with_medium(g: dict, system: dict, history: list[dict], code: str)
     MAX_ATTEMPTS to produce something the living machine accepts."""
     history.append({"role": "user", "content": translate_prompt(g, code)})
     for attempt in range(1, MAX_ATTEMPTS + 1):
-        reply = ask([system] + history[-HISTORY_TURNS:])
+        reply = ask([system] + history[-HISTORY_TURNS:], temperature=0.2)
         history.append({"role": "assistant", "content": reply})
         offered = extract_code(reply)
+        if offered is None:  # the ghost talked but did not write; insist once
+            history.append({"role": "user", "content":
+                            "You gave no program. Reply with the complete corrected program in a single fenced code block, nothing else."})
+            reply = ask([system] + history[-HISTORY_TURNS:], temperature=0.2)
+            history.append({"role": "assistant", "content": reply})
+            offered = extract_code(reply)
         if offered is None:
-            console.print("[dim]the medium: no code block in the reply[/dim]")
+            console.print("[dim]the medium: the ghost would not write[/dim]")
             return
         ok, msg = compile_check(g["id"], offered)
         if ok:
