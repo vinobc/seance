@@ -89,7 +89,7 @@ Where a closed API would have won: a frontier model would have written compilabl
 
 ## My Agent Session
 
-Built with Claude as a pair programmer, one step at a time: it drafted the code and the ghost profiles, I ran every séance on my Mac and pasted the transcripts back, and each fix came from reading a failure together. Nine commits, each one a lesson above.
+Built with Claude as a pair programmer, one step at a time: it drafted the code and the ghost profiles, I ran every séance on my Mac and pasted the transcripts back, and each fix came from reading a failure together. Eight commits of code, each one a lesson above.
 
 ## The Spirit of It
 
